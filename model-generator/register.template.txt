@@ -1,0 +1,21 @@
+import { MetadataStore } from 'breeze-client';
+{{#each this as |config|}}
+{{debug}}
+{{#modules}}import { {{path}} } from './{{config.ctxName}}/{{moduleName}}';
+{{/modules}}
+{{/each}}
+
+export class RegistrationHelper {
+
+    static register(metadataStore: MetadataStore) {
+        switch () {
+            {{#each this as |config|}}
+                case: {{config.ctxName}}:
+                    {{#modules}}
+        metadataStore.registerEntityTypeCtor('{{entityType.namespace}}', {{entityType.shortName}}{{#entityType.initializerFn}}, {{../entityType.shortName}}.{{.}}{{/entityType.initializerFn}});
+    {{/modules}}
+    break;
+            {{/each}}
+        }
+    }
+}

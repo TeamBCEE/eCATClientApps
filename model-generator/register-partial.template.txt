@@ -1,0 +1,17 @@
+case {{ctxName}}:
+
+    break;
+export class RegistrationHelper {
+
+    static register(metadataStore: MetadataStore) {
+        switch () {
+            {{#each modulesCollection}}
+                case: {{ctxName}}:
+                    {{#modules}}
+        metadataStore.registerEntityTypeCtor('{{entityType.namespace}}', {{entityType.shortName}}{{#entityType.initializerFn}}, {{../entityType.shortName}}.{{.}}{{/entityType.initializerFn}});
+    {{/modules}}
+    break;
+            {{/each}}
+        }
+    }
+}
