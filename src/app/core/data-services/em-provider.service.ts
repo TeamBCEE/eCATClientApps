@@ -28,7 +28,6 @@ export interface IEmStatus {
 @Injectable()
 export class EntityManagerProvider {
 
-    //private static _preparePromise: Array<EcEntityDomains, promises.IPromise<any>>;
     private static _masterManagers: Array<IEmStatus> = [];
 
     constructor() {
@@ -36,7 +35,7 @@ export class EntityManagerProvider {
         config.initializeAdapterInstances({ dataService: 'webApi', uriBuilder: 'odata' });
     }
 
-    prepare(entityDomain: EcEntityDomain, serviceEndpoint: string): promises.IPromise<any> {
+    prepare(entityDomain: EcEntityDomain, regHelper: RegistrationHelper, serviceEndpoint: string): promises.IPromise<any> {
         let emStatus = EntityManagerProvider._masterManagers[entityDomain];
 
         if (!emStatus) {
@@ -49,7 +48,7 @@ export class EntityManagerProvider {
 
         if (!emStatus.promise) {
             // Configure breeze adapaters. See rollup.js comment above
-            serviceEndpoint = `breeze\\${serviceEndpoint}`;
+            serviceEndpoint = `${env.apiEndpoint}/breeze/${serviceEndpoint}`;
 
             console.log(serviceEndpoint);
             let dsconfig: DataServiceOptions = {
@@ -68,16 +67,22 @@ export class EntityManagerProvider {
                 dataService: dataService
             });
 
-            if (env.dev) {
+            //refactor this out to a mock endpoint
+            // if (env.dev) {
+            //     const devMetadata = env.metadata;
+            //     emStatus.etManager.metadataStore.importMetadata(devMetadata(entityDomain));
+            //     regHelper.register(emStatus.etManager.metadataStore);
+            //     this.registerAnnotations(emStatus.etManager.metadataStore);
+            //     return <any>Promise.resolve();
+            // }
 
-            }
             return emStatus.promise = emStatus.etManager.fetchMetadata().then(() => {
-                RegistrationHelper.register(entityDomain, emStatus.etManager.metadataStore);
+                regHelper.register(emStatus.etManager.metadataStore);
                 this.registerAnnotations(emStatus.etManager.metadataStore);
 
                 // Load lockups
-                let query = EntityQuery.from('startup');
-                return emStatus.etManager.executeQuery(query);
+                //let query = EntityQuery.from('startup');
+                //return emStatus.etManager.executeQuery(query);
             }).catch(e => {
                 // If there's an error, we need to ensure prepare can be called fresh
                 emStatus.promise = null;
@@ -95,10 +100,9 @@ export class EntityManagerProvider {
         }
     }
 
-    // newManager(entityDomain: EcEntityDomain): EntityManager {
-    //     return EntityManagerProvider._masterManagers[entityDomain].etManager;
-    //     this.seedManager(manager);
-    // }
+    newManager(entityDomain: EcEntityDomain): EntityManager {
+        return EntityManagerProvider._masterManagers[entityDomain].etManager;
+    }
 
     // private seedManager(manager: EntityManager) {
     //     manager.importEntities(EntityManagerProvider._masterManager.exportEntities(null, { asString: false, includeMetadata: false }));

@@ -3,6 +3,7 @@ import { EntityManager, Entity, EntityQuery, FetchStrategy, SaveOptions, EntityC
 import { Subject } from 'rxjs/Subject';
 
 import { EntityManagerProvider } from '../../core';
+import { EcEntityDomain } from '../../app-constants';
 import { IRepository, Repository } from './base-repository.service';
 
 @Injectable()
@@ -21,7 +22,7 @@ export class UnitOfWork {
 
     protected get manager(): EntityManager {
         if (!this._manager) {
-            //this._manager = this._emProvider.newManager();
+            this._manager = this._emProvider.newManager(this._etDomain);
 
             this._manager.entityChanged.subscribe(args => {
                 this.entityChangedSubject.next(args);
@@ -39,7 +40,7 @@ export class UnitOfWork {
         return null;
     }
 
-    constructor(private _emProvider: EntityManagerProvider) {
+    constructor(private _etDomain: EcEntityDomain, private _emProvider: EntityManagerProvider) {
         this.entityChangedSubject = new Subject<EntityChangedEventArgs>();
     }
 

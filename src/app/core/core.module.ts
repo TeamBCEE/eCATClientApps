@@ -5,6 +5,7 @@ import { CovalentCoreModule } from '@covalent/core';
 
 import { EcUserUow, EntityManagerProvider } from './data-services';
 import { EcSharedModule } from '../shared';
+import { EntityUserModule } from '../../entities/user';
 import { AppStartupGuard } from './guard.service';
 
 @NgModule({
@@ -13,6 +14,7 @@ import { AppStartupGuard } from './guard.service';
     MaterialModule.forRoot(),
     CovalentCoreModule.forRoot(),
     EcSharedModule,
+    EntityUserModule
   ],
   declarations: [],
   providers: [

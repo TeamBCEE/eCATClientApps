@@ -4,11 +4,6 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # Metadata Generator needed to make breezejs entities
-src/entities/**/*.*
-model-generator/*.json
-!model-generator/package.json
-!src/entities/entitybase.ts
-!src/entities/index.ts
 
 # User-specific files
 *.suo

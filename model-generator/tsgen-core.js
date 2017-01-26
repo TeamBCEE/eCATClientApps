@@ -47,10 +47,6 @@ function generate(configs) {
       throw new Error("Must specify a valid input file name");
     }
 
-    const regex = /\S*\.(\w*Ctx)/g;
-    var match = regex.exec(config.inputFileName);
-    config.ctxName = match[1];
-
     config.sourceFilesFolder = config.sourceFilesFolder || config.outputFolder;
 
     if (config.camelCase) {
@@ -59,7 +55,6 @@ function generate(configs) {
 
     console.log('----------------------------------------');
     console.log('Generating typescript classes...');
-    console.log('ContextName: ' + config.ctxName);
     console.log('Input: ' + path.resolve(config.inputFileName));
     console.log('Source: ' + path.resolve(config.sourceFilesFolder));
     console.log('Output: ' + path.resolve(config.outputFolder));
@@ -78,11 +73,6 @@ function generate(configs) {
     var compiledTemplate = compileTemplate('entity.template.txt');
 
     processRawMetadata(metadataStore, config);
-
-    modulesCollection.push({
-      ctxName: config.ctxName,
-      modules: metadataStore.modules
-    });
 
     if (config.useEnumTypes) {
       // until breeze adds the enumTypes to the metadataStore
@@ -107,8 +97,15 @@ function generate(configs) {
 
     metadataStore.namespace = metadataStore.getEntityTypes()[0].namespace;
 
-    // Generate entity model
-    compiledTemplate = compileTemplate('entityModel.template.txt');
+    const regex = /\.(\w*)$/g;
+    var match = regex.exec(metadataStore.namespace);
+    config.ctxName = match[1];
+
+    metadataStore.ctxName = camelCase(config.ctxName);
+    metadataStore.ctxNameUpper = config.ctxName,
+
+      // Generate entity model
+      compiledTemplate = compileTemplate('index.template.txt');
     var ts = compiledTemplate(metadataStore);
     var filename = fileNameCase('index', config) + '.ts';
     writeIfChanged(filename, ts, config);
@@ -119,17 +116,20 @@ function generate(configs) {
     var filename = fileNameCase('Metadata', config) + '.ts';
     writeIfChanged(filename, ts, config);
 
+    // Generate registration helper
+    compiledTemplate = compileTemplate('register.template.txt');
+    var ts = compiledTemplate(metadataStore);
+    var filename = fileNameCase('RegHelper', config) + '.ts';
+    writeIfChanged(filename, ts, config);
+
+    // Generate App Module
+    compiledTemplate = compileTemplate('module.template.txt');
+    var ts = compiledTemplate(metadataStore);
+    var filename = fileNameCase(config.ctxName, config) + '-entity.module.ts';
+    writeIfChanged(filename, ts, config);
+
   });
 
-  // Generate registration helper
-  var compiledRegTemplate = compileTemplate('register.template.txt');
-  console.log(modulesCollection);
-  globalConfig.outputFolder = '../src/entities';
-  globalConfig.sourceFilesFolder = globalConfig.outputFolder;
-  var ts = compiledRegTemplate(modulesCollection);
-  console.log(ts);
-  var filename = fileNameCase('RegHelper', globalConfig) + '.ts';
-  writeIfChanged(filename, ts, globalConfig);
 
   // Generate enums.ts
   if (config.useEnumTypes) {
@@ -226,9 +226,6 @@ function processRawMetadata(metadataStore, config) {
 
       if (matches && matches.length != 0) {
         entityType.initializerFn = matches[2];
-      } else {
-        entityType.initializerFn = 'initializer';
-        entityType.generateInitializer = true;
       }
 
       if (entityType.initializerFn) {
@@ -353,7 +350,6 @@ function compileTemplate(filename) {
 
 /** Write to the output file if the content is different from the source file */
 function writeIfChanged(filename, content, config) {
-  console.log("Write if Changed: " + filename);
   var sourceFilename = path.resolve(config.sourceFilesFolder, filename);
   console.log(sourceFilename);
   var outFilename = path.resolve(config.outputFolder, filename);

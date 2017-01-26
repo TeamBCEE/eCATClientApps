@@ -9,14 +9,14 @@ import { {{baseClass}} } from '../{{baseClass}}';
 /// </code-import>
 
 export class {{shortName}} {{#baseClass}}extends {{.}} {{/baseClass}}{
+   // Generated code. Do not place code below this line.
+   {{#properties}}
+   {{name}}: {{dataType}};
+   {{/properties}}
 
    /// <code> Place custom code between <code> tags
    {{{code}}}
    /// </code>
 
-   // Generated code. Do not place code below this line.
-   {{#properties}}
-   {{name}}: {{dataType}};
-   {{/properties}}
 }
 

@@ -1,5 +1,0 @@
-export * from './metadata';
-{{#modules}}
-export { {{path}} } from './{{moduleName}}';
-{{/modules}}
-

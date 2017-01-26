@@ -34,14 +34,14 @@ function generateEntities() {
   var webServicesCtx = [
     {
       inputFileName: './Ecat.DataLib.Context.UserCtx.json',
-      outputFolder: '../src/entities/userCtx',
+      outputFolder: '../src/entities/user',
       camelCase: true,
       baseClassName: 'EntityBase',
       kebabCaseFileNames: false
     },
     {
       inputFileName: './Ecat.DataLib.Context.SchoolCtx.json',
-      outputFolder: '../src/entities/schoolCtx',
+      outputFolder: '../src/entities/school',
       camelCase: true,
       baseClassName: 'EntityBase',
       kebabCaseFileNames: false
