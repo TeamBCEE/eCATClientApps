@@ -4,6 +4,7 @@ import { MaterialModule } from '@angular/material';
 import { CovalentCoreModule } from '@covalent/core';
 
 import { EcUserUow, EntityManagerProvider } from './data-services';
+import { TopNavService, SideNavService } from './nav-services';
 import { EcSharedModule } from '../shared';
 import { EntityUserModule } from '../../entities/user';
 import { AppStartupGuard } from './guard.service';
@@ -20,7 +21,9 @@ import { AppStartupGuard } from './guard.service';
   providers: [
     EcUserUow,
     EntityManagerProvider,
-    AppStartupGuard
+    AppStartupGuard,
+    TopNavService,
+    SideNavService
   ]
 })
 export class CoreModule { }
