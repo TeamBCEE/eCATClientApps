@@ -1,13 +1,22 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AppDashboardComponent } from './dashboard.component';
+import { MainDashComponent } from './main';
 
 export const dashboardRouterableComponents: any[] = [
-    AppDashboardComponent
+    AppDashboardComponent,
+    MainDashComponent
 ];
 
 const dashboardRoutes: Routes = [
-    { path: '', component: AppDashboardComponent }
+    { path: '',
+      component: AppDashboardComponent,
+      children: [
+        {
+            path: '',
+            component: MainDashComponent
+        }
+      ]}
 ];
 
 @NgModule({

@@ -19,7 +19,8 @@
       "mobile": false,
       "styles": [
         "styles.scss",
-        "../node_modules/@covalent/core/common/platform.scss"
+        "../node_modules/@covalent/core/common/platform.scss",
+        "../src/assets/scss/ecat-theme.scss"
       ],
       "scripts": [],
       "environments": {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { EcUserUow } from '../core';
 import { EcEntityDomain } from '../app-constants';
 import { Person } from '../../entities/user';
+import { TopNavService } from '../core/nav-services';
 
 @Component({
     selector: 'app-dashboard',
@@ -9,17 +10,19 @@ import { Person } from '../../entities/user';
     styleUrls: ['./dashboard.component.scss']
 })
 export class AppDashboardComponent implements OnInit {
-    title = 'app works!';
     testPerson: Person;
+    title: string;
     /**
      *
      */
-    constructor(private userUow: EcUserUow) {
+    constructor(private userUow: EcUserUow, private tnService: TopNavService) {
 
     }
 
     ngOnInit() {
-        console.log(this.userUow);
+
+        this.title = this.tnService.getNavTitle('Dashboard');
+
         this.userUow.person
             .withId(1)
             .then((foundPerson) => {

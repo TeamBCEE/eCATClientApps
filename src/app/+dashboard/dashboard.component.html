@@ -1,3 +1,21 @@
-<h1>
-    {{title}}
-</h1>
+<td-layout #layout title="Sidenav Title">
+    <md-nav-list td-sidenav-content>
+        <a *ngFor="let item of routes" md-list-item [routerLink]="[item.route]" (click)="layout.close()">
+            <md-icon md-list-icon>{{item.icon}}</md-icon>
+            {{item.title}}
+        </a>
+    </md-nav-list>
+    <td-layout-nav title="Toolbar Title">
+        <div td-toolbar-content layout="row" layout-align="center center" flex>
+            <md-icon class="md-icon-logo" svgIcon="assets:logo"></md-icon>
+            <span flex></span>
+            <button md-icon-button> 
+                <md-icon>favorite</md-icon>
+            </button>
+        </div>
+        <router-outlet></router-outlet>
+        <td-layout-footer>
+            Optional footer
+        </td-layout-footer>
+    </td-layout-nav>
+</td-layout>
