@@ -1,0 +1,35 @@
+$black-87-opacity: rgba(black, 0.87);
+$white-87-opacity: rgba(white, 0.87);
+
+$ecat-blue: (
+        50: #85accb,
+        100: #73a0c3,
+        200: #6194bc,
+        300: #4f88b4,
+        400: #467aa4,
+        500: #3e6d92,
+        600: #366080,
+        700: #2f526e,
+        800: #27455c,
+        900: #20384a,
+        A100: #96b8d3,
+        A200: #a8c4da,
+        A400: #bad0e2,
+        A700: #182a38,
+          contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);

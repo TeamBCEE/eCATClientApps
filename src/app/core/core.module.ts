@@ -1,7 +1,6 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MaterialModule } from '@angular/material';
-import { CovalentCoreModule } from '@covalent/core';
+import 'hammerjs';
 
 import { EcUserUow, EntityManagerProvider } from './data-services';
 import { TopNavService, SideNavService } from './nav-services';
@@ -12,8 +11,6 @@ import { AppStartupGuard } from './guard.service';
 @NgModule({
   imports: [
     CommonModule,
-    MaterialModule.forRoot(),
-    CovalentCoreModule.forRoot(),
     EcSharedModule,
     EntityUserModule
   ],
@@ -26,4 +23,11 @@ import { AppStartupGuard } from './guard.service';
     SideNavService
   ]
 })
-export class CoreModule { }
+export class CoreModule {
+  constructor( @Optional() @SkipSelf() parentModule: CoreModule) {
+    if (parentModule) {
+      throw new Error(
+        'CoreModule is already loaded. Import it in the AppModule only');
+    }
+  }
+}
